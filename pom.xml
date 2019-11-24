@@ -23,45 +23,12 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- tag::plugin[] -->
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.13</version>
-                <configuration>
-                    <repository>strangeforest/${project.artifactId}</repository>
-                    <tag>${project.version}</tag>
-                </configuration>
-            </plugin>
-            <!-- end::plugin[] -->
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>docker</executable>
-                    <arguments>
-                        <argument>build</argument>
-                        <argument>-t</argument>
-                        <argument>strangeforest/${project.artifactId}</argument>
-                        <argument>.</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
-
-            <!-- tag::unpack[] -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -84,7 +51,53 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- end::unpack[] -->
+
+            <!-- Currently the most effective way to create Docker images from Maven -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>docker</executable>
+                    <arguments>
+                        <argument>build</argument>
+                        <argument>-t</argument>
+                        <argument>strangeforest/${project.artifactId}</argument>
+                        <argument>.</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+
+            <!-- Has blocking performance issue https://github.com/spotify/dockerfile-maven/issues/329 -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.13</version>
+                <configuration>
+                    <repository>strangeforest/${project.artifactId}</repository>
+                    <tag>spotify</tag>
+                </configuration>
+            </plugin>
+
+            <!-- Can create images w/o Docker installed, but uses Maven plugin XML config instead of Dockerfile -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>1.8.0</version>
+                <configuration>
+                    <to>
+                        <image>strangeforest/${project.artifactId}:jib</image>
+                    </to>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

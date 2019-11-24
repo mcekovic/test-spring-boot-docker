@@ -1,3 +1,7 @@
 logging:
   file:
     name: /var/log/hello-docker.log
+
+spring:
+  jmx:
+    enabled: true
