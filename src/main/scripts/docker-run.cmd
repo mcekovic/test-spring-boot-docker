@@ -1,0 +1,1 @@
+docker run -p 8080:8080 -h woodywoodpecker --name woody -td --mount type=tmpfs,dst=/tmp --mount type=bind,src=c:/Temp,dst=/var/log --rm strangeforest/hello-docker
