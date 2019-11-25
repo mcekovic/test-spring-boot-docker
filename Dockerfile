@@ -1,8 +1,10 @@
+# Use Alpine Linux and JRE if possible
 FROM adoptopenjdk/openjdk11:alpine-jre
 EXPOSE 8080 9999
 VOLUME /var/log /tmp
 ARG DEPENDENCY=target/dependency
 ARG APP=/app
+# Dedicated layers for 3-rd party libraries, application code and application configuration
 COPY ${DEPENDENCY}/BOOT-INF/lib ${APP}/lib
 COPY ${DEPENDENCY}/BOOT-INF/classes ${APP}/classes
 COPY ${DEPENDENCY}/META-INF ${APP}/classes/META-INF

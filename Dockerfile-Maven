@@ -3,15 +3,18 @@ COPY ./mvnw /build/
 COPY ./.mvn /build/.mvn
 COPY ./pom.xml /build/
 WORKDIR /build/
+# Fetch Maven and dependencies in dedicated layer to be cached
 RUN ./mvnw dependency:go-offline -B
 COPY . .
 RUN ./mvnw package
 
+# Use Alpine Linux and JRE if possible
 FROM adoptopenjdk/openjdk11:alpine-jre
 EXPOSE 8080 9999
 VOLUME /var/log /tmp
 ARG DEPENDENCY=/build/target/dependency
 ARG APP=/app
+# Dedicated layers for 3-rd party libraries, application code and application configuration
 COPY --from=BUILD ${DEPENDENCY}/BOOT-INF/lib ${APP}/lib
 COPY --from=BUILD ${DEPENDENCY}/BOOT-INF/classes ${APP}/classes
 COPY --from=BUILD ${DEPENDENCY}/META-INF ${APP}/classes/META-INF

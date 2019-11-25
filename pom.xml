@@ -29,7 +29,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <layout>NONE</layout>
+                    <layout>NONE</layout><!-- No Spring Boot loader, just application -->
                 </configuration>
             </plugin>
 
