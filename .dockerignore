@@ -1,0 +1,7 @@
+/.idea
+*.iml
+src
+target
+!target/dependency
+classes
+out
